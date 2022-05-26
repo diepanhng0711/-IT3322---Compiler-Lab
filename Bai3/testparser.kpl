@@ -1,0 +1,16 @@
+Program Test; 
+const PI=239983; 
+      E='e';
+type mangsonguyen= array (. 100 .) of integer;
+     string= array(.100.) of char;
+var x:mangsonguyen;
+procedure setx (_x:integer);
+begin
+    begin
+        x(.0.) := _x
+    end; ; ; ; ; ; ;
+end ; 
+begin
+    x(.0.) :=5
+end
+.
