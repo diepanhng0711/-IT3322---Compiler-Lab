@@ -100,13 +100,9 @@ void compileBlock5(void)
 
 void compileConstDecls(void)
 {
-  // TODO
-  if (lookAhead->tokenType == TK_IDENT)
-  {
-    compileConstDecl();
-    compileConstDecls();
-  }
-  //  else return;  OK
+  while (lookAhead->tokenType == TK_IDENT){
+		compileConstDecl();
+	}
 }
 
 void compileConstDecl(void)
@@ -148,12 +144,22 @@ void compileVarDecl(void)
 void compileSubDecls(void)
 {
   assert("Parsing subtoutines ....");
-  while (lookAhead->tokenType == KW_FUNCTION || lookAhead->tokenType == KW_PROCEDURE)
+  /*while (lookAhead->tokenType == KW_FUNCTION || lookAhead->tokenType == KW_PROCEDURE)
   {
     if (lookAhead->tokenType == KW_FUNCTION)
       compileFuncDecl();
     else
       compileProcDecl();
+  }*/
+  switch (lookAhead->tokenType){
+		case KW_FUNCTION:
+			compileFuncDecl();
+			compileSubDecls();
+			break;
+		case KW_PROCEDURE:
+			compileProcDecl();
+			compileSubDecls();
+			break;
   }
   assert("Subtoutines parsed ....");
 }
@@ -205,7 +211,7 @@ void compileUnsignedConstant(void)
 
 void compileConstant(void)
 {
-  if (lookAhead->tokenType == SB_PLUS)
+  /*if (lookAhead->tokenType == SB_PLUS)
   {
     eat(SB_PLUS);
     compileConstant2();
@@ -222,9 +228,26 @@ void compileConstant(void)
   else
   {
     compileConstant2();
-  }
+  }*/
+  switch (lookAhead->tokenType) {
+		case SB_PLUS: 
+			eat(SB_PLUS);
+			compileConstant2();
+			break;
+		case SB_MINUS:
+			eat(SB_MINUS);
+			compileConstant2();
+			break;
+		case TK_CHAR:
+			eat(TK_CHAR);
+			break;
+		default: 
+			compileConstant2();
+			break;
+	}
 }
 
+//CẦN CHECK
 void compileConstant2(void)
 {
   if (lookAhead->tokenType == TK_IDENT)
@@ -255,18 +278,28 @@ void compileType(void)
     eat(TK_IDENT);
     break;
   case KW_ARRAY:
-    eat(KW_ARRAY);
+    /*eat(KW_ARRAY);
     eat(SB_LSEL);
     eat(TK_NUMBER);
     eat(SB_RSEL);
     eat(KW_OF);
-    compileType();
+    compileType();*/
+    eat(KW_ARRAY);
+			do {
+				eat(SB_LSEL);
+				eat(TK_NUMBER);
+				eat(SB_RSEL);
+			} while (lookAhead->tokenType == SB_LSEL);
+			eat(KW_OF);
+			compileType();
+			break;
   default:
     error(ERR_INVALIDTYPE, lookAhead->lineNo, lookAhead->colNo);
     break;
   }
 }
 
+//CẦN CHECK
 void compileBasicType(void)
 {
   if (lookAhead->tokenType == KW_INTEGER)
@@ -304,6 +337,7 @@ void compileParams2(void)
   }
 }
 
+//CẦN CHECK
 void compileParam(void)
 {
   if (lookAhead->tokenType == TK_IDENT)
@@ -339,6 +373,11 @@ void compileStatements2(void)
     compileStatement();
     compileStatements2();
   }
+  //Thêm
+  if (lookAhead->tokenType != SB_SEMICOLON 
+			&& lookAhead->tokenType != KW_END){
+		missingToken(SB_SEMICOLON, lookAhead->lineNo, lookAhead->colNo);
+	}
 }
 
 void compileStatement(void)
@@ -472,6 +511,7 @@ void compileCondition(void)
   compileCondition2();
 }
 
+//CẦN CHECK LẠI
 void compileCondition2(void)
 {
   switch (lookAhead->tokenType) {
@@ -499,9 +539,9 @@ void compileCondition2(void)
       eat(SB_GT);
       compileExpression();
       break;
-    default:
+    /*default:
       error(ERR_INVALIDCOMPARATOR, lookAhead->lineNo, lookAhead->colNo);
-      break;
+      break;*/
   }
 }
 
@@ -530,6 +570,7 @@ void compileExpression2(void)
   compileExpression3();
 }
 
+//CẦN CHECK LẠI
 void compileExpression3(void)
 {
   switch (lookAhead->tokenType) {
@@ -543,9 +584,9 @@ void compileExpression3(void)
       compileTerm();
       compileExpression3();
       break;
-    default:
+    /*default:
       error(ERR_INVALIDEXPRESSION, lookAhead->lineNo, lookAhead->colNo);
-      break;
+      break;*/
   }
 }
 
@@ -555,6 +596,7 @@ void compileTerm(void)
   compileTerm2();
 }
 
+//CẦN CHECK LẠI
 void compileTerm2(void)
 {
   switch (lookAhead->tokenType) {
@@ -568,9 +610,9 @@ void compileTerm2(void)
       compileFactor();
       compileTerm2();
       break;
-    default:
+    /*default:
       error(ERR_INVALIDTERM, lookAhead->lineNo, lookAhead->colNo);
-      break;
+      break;*/
   }
 }
 
