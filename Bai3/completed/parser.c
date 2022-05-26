@@ -108,7 +108,7 @@ void compileConstDecls(void)
 void compileConstDecl(void)
 {
   eat(TK_IDENT);
-  eat(SB_SEMICOLON);
+  eat(SB_EQ);
   compileConstant();
   eat(SB_SEMICOLON);
 }
@@ -250,17 +250,16 @@ void compileConstant(void)
 //CẦN CHECK
 void compileConstant2(void)
 {
-  if (lookAhead->tokenType == TK_IDENT)
-  {
-    eat(TK_IDENT);
-  }
-  else if (lookAhead->tokenType == TK_NUMBER)
-  {
+  switch (lookAhead->tokenType) {
+  case TK_NUMBER:
     eat(TK_NUMBER);
-  }
-  else
-  {
+    break;
+  case TK_IDENT:
+    eat(TK_IDENT);
+    break;
+  default:
     error(ERR_INVALIDCONSTANT, lookAhead->lineNo, lookAhead->colNo);
+    break;
   }
 }
 
@@ -283,7 +282,8 @@ void compileType(void)
     eat(TK_NUMBER);
     eat(SB_RSEL);
     eat(KW_OF);
-    compileType();*/
+    compileType();
+    break;*/
     eat(KW_ARRAY);
 			do {
 				eat(SB_LSEL);
