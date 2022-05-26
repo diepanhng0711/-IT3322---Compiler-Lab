@@ -36,4 +36,4 @@ BEGIN
       CALL  HANOI(N,P,Q);  
       CALL  WRITELN  
     END
-END.  (* TOWER OF HANOI *)
+END.  (* TOWER OF HANOI 
