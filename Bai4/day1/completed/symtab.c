@@ -240,7 +240,12 @@ void addObject(ObjectNode **objList, Object* obj) {
 }
 
 Object* findObject(ObjectNode *objList, char *name) {
-  // TODO
+  while (objList != NULL) {
+    if (strcmp(objList->object->name, name) == 0)
+      return objList->object;
+    objList = objList->next;
+  }
+  return NULL;
 }
 
 /******************* others ******************************/
